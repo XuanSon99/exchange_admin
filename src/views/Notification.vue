@@ -40,6 +40,11 @@
                                                 <v-text-field v-model="editedItem.content" label="Nội dung" />
                                             </v-col>
                                         </v-row>
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <v-text-field v-model="editedItem.url" label="Đường dẫn" />
+                                            </v-col>
+                                        </v-row>
                                     </v-container>
                                 </v-card-text>
 
@@ -103,12 +108,14 @@ export default {
         editedItem: {
             color: "",
             content: "",
-            phone: ""
+            phone: "",
+            url: ""
         },
         defaultItem: {
             color: "",
             content: "",
-            phone: ""
+            phone: "",
+            url: ""
         },
         colors: [
             "#E53333",
@@ -213,6 +220,7 @@ export default {
                 color: this.editedItem.color,
                 content: this.editedItem.content,
                 phone: this.editedItem.phone,
+                url: this.editedItem.url
             };
 
             if (this.editedIndex > -1) {

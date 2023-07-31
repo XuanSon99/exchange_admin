@@ -119,19 +119,19 @@ export default {
       this.CallAPI("put", "manage/buy-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công" }, (res) => {
         this.$toast.success('Xác nhận đơn hàng thành công')
         this.dialog = false
-        this.sendNotifi('#3ED050',`Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra ví của bạn`)
+        this.sendNotifi('#3ED050',`Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra ví của bạn`,"/history")
         this.getData()
       })
     },
     cancleOrder() {
       this.CallAPI("put", "manage/buy-order/" + this.$route.params.id, { status: 2, description: this.reason }, (res) => {
         this.$toast.success('Hủy đơn hàng thành công')
-        this.sendNotifi('#E53333',`Giao dịch mã ${this.data.code} đã bị hủy. ${this.reason}`)
+        this.sendNotifi('#E53333',`Giao dịch mã ${this.data.code} đã bị hủy. ${this.reason}`,"/history")
         this.dialog = false
         this.getData()
       })
     },
-    sendNotifi(color, content) {
+    sendNotifi(color, content, url) {
       this.CallAPI(
         "post",
         "manage/notification",
@@ -139,6 +139,7 @@ export default {
           phone: this.data.phone,
           color: color,
           content: content,
+          url: url
         }
       );
     },
