@@ -1,5 +1,5 @@
 <template>
-  <main class="detail-info">
+  <main>
     <div class="item secondary">
       <v-simple-table border v-if="data && state_list">
         <template v-slot:default>
@@ -54,15 +54,22 @@
         </template>
       </v-simple-table>
       <v-card class="pa-5" outlined>
-        <ul>
-          <li>Hãy chắc chắn rằng bạn đã nhận
-            <b class="uppercase main-color">{{ data.amount }} {{ data.token }} ({{ data.network }})</b>
-          </li>
-          <li>
-            Sau đó chuyển <b class="main-color">{{ formatMoney(data.money) }} VND</b> vào ngân hàng:
-            <b class="main-color">{{ data.account_number }} - {{ data.bank_name }} - {{ data.owner_name }}</b>
-          </li>
-        </ul>
+        <v-row>
+          <v-col cols="12" md="6">
+            <ul>
+              <li>Hãy chắc chắn rằng bạn đã nhận
+                <b class="uppercase main-color">{{ data.amount }} {{ data.token }} ({{ data.network }})</b>
+              </li>
+              <li>
+                Sau đó chuyển <b class="main-color">{{ formatMoney(data.money) }} VND</b> vào ngân hàng:
+                <b class="main-color">{{ data.account_number }} - {{ data.bank_name }} - {{ data.owner_name }}</b>
+              </li>
+            </ul>
+          </v-col>
+          <v-col cols="12" md="6">
+            <img :src="qrcode" class="img-qr" alt="">
+          </v-col>
+        </v-row>
       </v-card>
       <div>
         <v-btn color="primary" class="mt-5" @click="confirmOrder"> Xác nhận thành công </v-btn>
@@ -104,6 +111,11 @@ export default {
       reason: "Do chúng tôi chưa nhận được khoản tiền bạn phải thanh toán"
     };
   },
+  computed: {
+    qrcode() {
+      return `https://img.vietqr.io/image/${this.data.bank_name}-${this.data.account_number}-compact2.jpg?amount=${this.data.money}&addInfo=${this.data.code}&accountName=${this.data.owner_name}`
+    }
+  },
   mounted() {
     this.getData();
     this.CallAPI("get", "manage/state", {}, (res) => {
@@ -124,7 +136,7 @@ export default {
     confirmOrder() {
       this.CallAPI("put", "manage/sell-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công" }, (res) => {
         this.$toast.success('Xác nhận đơn hàng thành công')
-        this.sendNotifi('#3ED050',`Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra tài khoản của bạn`,"/history")
+        this.sendNotifi('#3ED050', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra tài khoản của bạn`, "/history")
         this.dialog = false
         this.getData()
       })
@@ -132,7 +144,7 @@ export default {
     cancleOrder() {
       this.CallAPI("put", "manage/sell-order/" + this.$route.params.id, { status: 2, description: this.reason }, (res) => {
         this.$toast.success('Hủy đơn hàng thành công')
-        this.sendNotifi('#E53333',`Giao dịch mã ${this.data.code} đã bị hủy. ${this.reason}`,"/history")
+        this.sendNotifi('#E53333', `Giao dịch mã ${this.data.code} đã bị hủy. ${this.reason}`, "/history")
         this.dialog = false
         this.getData()
       })
