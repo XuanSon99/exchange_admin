@@ -30,15 +30,27 @@
             </tr>
             <tr>
               <td>Địa chỉ ví nhận</td>
-              <td>{{ data.address }}</td>
+              <td>
+                <a :href="toExplorer('address', data.address)" target="_blank">
+                  {{ data.address }}
+                </a>
+              </td>
             </tr>
             <tr>
               <td>Thời gian</td>
               <td>{{ formatDate(data.created_at) }}</td>
             </tr>
-            <tr>
+            <tr v-if="data.description">
               <td>Thông báo KH</td>
               <td>{{ data.description }}</td>
+            </tr>
+            <tr v-if="data.txhash">
+              <td>TxHash</td>
+              <td>
+                <a :href="toExplorer('tx', data.txhash)" target="_blank">
+                  {{ data.txhash }}
+                </a>
+              </td>
             </tr>
             <tr>
               <td>Trạng thái</td>
@@ -55,10 +67,12 @@
         <v-row>
           <v-col cols="12" md="6">
             <ul>
-              <li>Hãy chắc chắn rằng bạn đã nhận <b>{{ formatMoney(data.money) }} VND</b></li>
-              <li>Sau đó chuyển <b class="uppercase">{{ data.amount }} {{ data.token }} ({{ data.network }})</b> tới ví
-                <b>{{
-                  data.address }}</b></li>
+              <li>Hãy chắc chắn rằng bạn đã nhận <b class="main-color">{{ formatMoney(data.money) }} VND</b></li>
+              <li>Sau đó chuyển <b class="uppercase main-color">{{ data.amount }} {{ data.token }} ({{ data.network
+              }})</b> tới ví
+                <b class="main-color">{{
+                  data.address }}</b>
+              </li>
             </ul>
           </v-col>
           <v-col cols="12" md="6">
@@ -66,8 +80,8 @@
           </v-col>
         </v-row>
       </v-card>
-      <div>
-        <v-btn color="primary" class="mt-5" @click="confirmOrder"> Xác nhận thành công </v-btn>
+      <div v-if="data.status == 3">
+        <v-btn color="primary" class="mt-5" @click="dialog1 = true"> Xác nhận thành công </v-btn>
         <v-btn color="error" class="ml-3 mt-5" @click="dialog = true">Hủy đơn hàng</v-btn>
       </div>
     </div>
@@ -93,6 +107,28 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialog1" max-width="450px">
+      <v-card>
+        <v-card-title>
+          <span>Nhập TxHash</span>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog1 = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <div class="mx-6 mt-6">
+          <v-text-field v-model="txhash" outlined clearable placeholder="Nhập txhash vừa chuyển"></v-text-field>
+        </div>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="default" @click="dialog1 = false"> Hủy </v-btn>
+          <v-btn color="primary" @click="confirmOrder"> Xác nhận </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </main>
 </template>
 
@@ -103,9 +139,11 @@ export default {
   data() {
     return {
       dialog: "",
+      dialog1: "",
       data: "",
       state_list: "",
-      reason: "Do chúng tôi chưa nhận được khoản tiền bạn phải thanh toán."
+      reason: "Do chúng tôi chưa nhận được khoản tiền bạn phải thanh toán.",
+      txhash: ""
     };
   },
   mounted() {
@@ -126,9 +164,13 @@ export default {
       });
     },
     confirmOrder() {
-      this.CallAPI("put", "manage/buy-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công" }, (res) => {
+      if (!this.txhash) {
+        this.$toast.error('Vui lòng nhập TxHash')
+        return
+      }
+      this.CallAPI("put", "manage/buy-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công", txhash: this.txhash }, (res) => {
         this.$toast.success('Xác nhận đơn hàng thành công')
-        this.dialog = false
+        this.dialog1 = false
         this.sendNotifi('#01c77d', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra ví của bạn`, "/history")
         this.getData()
       })
@@ -163,6 +205,18 @@ export default {
       let d = new Date(date);
       return d.toLocaleString();
     },
+    toExplorer(type, value) {
+      if (this.data.network == 'bep20') {
+        return `https://bscscan.com/${type}/${value}`
+      }
+      if (this.data.network == 'erc20') {
+        return `https://etherscan.io/${type}/${value}`
+      }
+      if (type == 'tx') {
+        return `https://tronscan.org/#/transaction/${value}`
+      }
+      return `https://tronscan.org/#/address/${value}`
+    }
   },
 };
 </script>

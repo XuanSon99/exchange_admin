@@ -38,7 +38,15 @@
               <td>Thời gian</td>
               <td>{{ formatDate(data.created_at) }}</td>
             </tr>
-            <tr>
+            <tr v-if="data.customer_address">
+              <td>Ví KH chuyển</td>
+              <td>
+                <a :href="toExplorer('address', data.customer_address)" target="_blank">
+                  {{ data.customer_address }}
+                </a>
+              </td>
+            </tr>
+            <tr v-if="data.description">
               <td>Thông báo KH</td>
               <td>{{ data.description }}</td>
             </tr>
@@ -59,6 +67,13 @@
             <ul>
               <li>Hãy chắc chắn rằng bạn đã nhận
                 <b class="uppercase main-color">{{ data.amount }} {{ data.token }} ({{ data.network }})</b>
+                từ ví
+                <b class="uppercase main-color" v-if="data.customer_address">
+                  {{ data.customer_address.slice(-5) }}
+                </b>
+                <b class="uppercase main-color" v-else>
+                  Khách hàng không nhập ví
+                </b>
               </li>
               <li>
                 Sau đó chuyển <b class="main-color">{{ formatMoney(data.money) }} VND</b> vào ngân hàng:
@@ -71,7 +86,7 @@
           </v-col>
         </v-row>
       </v-card>
-      <div>
+      <div v-if="data.status == 3">
         <v-btn color="primary" class="mt-5" @click="confirmOrder"> Xác nhận thành công </v-btn>
         <v-btn color="error" class="ml-3 mt-5" @click="dialog = true">Hủy đơn hàng</v-btn>
       </div>
@@ -171,6 +186,18 @@ export default {
       let d = new Date(date);
       return d.toLocaleString();
     },
+    toExplorer(type, value) {
+      if (this.data.network == 'bep20') {
+        return `https://bscscan.com/${type}/${value}`
+      }
+      if (this.data.network == 'erc20') {
+        return `https://etherscan.io/${type}/${value}`
+      }
+      if (type == 'tx') {
+        return `https://tronscan.org/#/transaction/${value}`
+      }
+      return `https://tronscan.org/#/address/${value}`
+    }
   },
 };
 </script>
