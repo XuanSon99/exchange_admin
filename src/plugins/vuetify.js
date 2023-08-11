@@ -12,7 +12,7 @@ export default new Vuetify({
     theme: {
         themes: {
             light: {
-                primary: "#00cdad",
+                primary: "#01c77d",
                 secondary: "#fff",
                 tertiary: "#0f2430",
                 fade: "#fff",
@@ -20,7 +20,7 @@ export default new Vuetify({
                 warning: "#00a9bc",
             },
             dark: {
-                primary: "#00cdad",
+                primary: "#01c77d",
                 secondary: "#0f2430",
                 tertiary: "#fff",
                 fade: "#0f2430",

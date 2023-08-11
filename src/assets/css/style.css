@@ -268,7 +268,11 @@ p.cancel1 {
 }
 
 .main-color {
-    color: #00cdad;
+    color: #01c77d;
+}
+
+.error-color {
+    color: #ff5252;
 }
 
 .img-qr {
@@ -278,6 +282,7 @@ p.cancel1 {
 .w300 {
     width: 250px;
 }
-.border{
+
+.border {
     border: 1px solid #000;
 }

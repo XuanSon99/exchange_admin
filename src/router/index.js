@@ -29,6 +29,13 @@ const routes = [
     }
   },
   {
+    path: '/ref/:id',
+    component: () => import('../views/RefOrder.vue'),
+    meta: {
+      show: true
+    }
+  },
+  {
     path: '/buy-order',
     component: () => import('../views/BuyOrder.vue'),
     meta: {

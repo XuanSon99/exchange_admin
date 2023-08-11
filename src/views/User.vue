@@ -22,11 +22,11 @@
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn small class="info mr-2" @click="$router.push('/user/' + item.phone)">
-            Chi tiết
+            Thông tin
           </v-btn>
-          <!-- <v-btn small class="success mr-2" @click="editItem(item)">
-            Nhắn tin
-          </v-btn> -->
+          <v-btn small class="primary mr-2" @click="$router.push('/ref/' + item.phone)">
+            Doanh số
+          </v-btn>
         </template>
       </v-data-table>
     </div>
