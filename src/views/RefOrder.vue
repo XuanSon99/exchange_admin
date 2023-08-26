@@ -116,6 +116,7 @@ export default {
       }
       this.CallAPI("get", url, {}, (res) => {
         this.data = res.data.data;
+        console.log(this.data);
         this.totalItems = res.data.total;
       });
     },

@@ -79,6 +79,13 @@ const routes = [
     }
   },
   {
+    path: '/setup',
+    component: () => import('../views/Setup.vue'),
+    meta: {
+      show: true
+    }
+  },
+  {
     path: '/notification',
     component: () => import('../views/Notification.vue'),
     meta: {

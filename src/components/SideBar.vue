@@ -109,6 +109,11 @@ export default {
           route: "/status",
         },
         {
+          icon: "mdi-cards-outline",
+          text: "Cài đặt",
+          route: "/setup",
+        },
+        {
           icon: "mdi-layers-outline",
           text: "DS admin",
           route: "/admin",
