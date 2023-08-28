@@ -20,10 +20,10 @@
             <v-date-picker v-model="filter.dates" @input="menu1 = false" range></v-date-picker>
           </v-menu>
         </div>
-        <div class="w300 ml-5">
+        <!-- <div class="w300 ml-5">
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Tìm mã đơn" @keydown.enter="searchHandle"
             outlined dense></v-text-field>
-        </div>
+        </div> -->
       </v-card-title>
       <v-data-table :headers="headers" :items="data" :items-per-page="10" :page.sync="page"
         :server-items-length="totalItems" :footer-props="{ 'items-per-page-options': [10, 10] }">
