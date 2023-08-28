@@ -114,6 +114,7 @@ export default {
       if (this.filter.dates[1]) {
         url += `&from=${this.filter.dates[0]}&to=${this.filter.dates[1]}`
       }
+      this.data = []
       this.CallAPI("get", url, {}, (res) => {
         this.totalItems = res.data.total;
         for (let i in res.data.data) {
@@ -253,6 +254,9 @@ export default {
     },
   },
   watch: {
+    page() {
+      this.getData();
+    },
     search() {
       if (!this.search) {
         this.getData()
