@@ -168,10 +168,10 @@ export default {
         this.$toast.error('Vui lòng nhập TxHash')
         return
       }
-      this.CallAPI("put", "manage/buy-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công", txhash: this.txhash }, (res) => {
+      this.CallAPI("put", "manage/buy-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công.", txhash: this.txhash }, (res) => {
         this.$toast.success('Xác nhận đơn hàng thành công')
         this.dialog1 = false
-        this.sendNotifi('#01c77d', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra ví của bạn`, "/history")
+        this.sendNotifi('#01c77d', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra ví của bạn.`, "/history")
         this.getData()
       })
     },

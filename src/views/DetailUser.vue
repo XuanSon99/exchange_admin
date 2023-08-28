@@ -110,12 +110,16 @@ export default {
         {},
         (res) => {
           this.getData()
-          this.sendNotifi('#01c77d', `Yêu cầu xác minh danh tính của bạn đã thành công.`, `/profile`)
+          this.sendNotifi('#01c77d', `Yêu cầu xác minh danh tính của bạn đã được thông qua.`, `/profile`)
           this.$toast.success("Duyệt KYC thành công");
         }
       );
     },
     deleteKYC() {
+      if(!this.reason){
+        this.$toast.success("Hãy nhập lý do hủy");
+        return
+      }
       this.CallAPI("delete", "manage/verify/" + this.data.phone, {}, (response) => {
         this.sendNotifi('#ff5252', `Xác minh danh tính không thành công. ${this.reason}. Vui lòng xác minh lại!`, `/kyc/${this.data.phone}`)
         this.$router.push("/user");

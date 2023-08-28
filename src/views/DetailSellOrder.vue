@@ -149,9 +149,9 @@ export default {
       });
     },
     confirmOrder() {
-      this.CallAPI("put", "manage/sell-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công" }, (res) => {
+      this.CallAPI("put", "manage/sell-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công." }, (res) => {
         this.$toast.success('Xác nhận đơn hàng thành công')
-        this.sendNotifi('#01c77d', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra tài khoản của bạn`, "/history")
+        this.sendNotifi('#01c77d', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra tài khoản của bạn.`, "/history")
         this.dialog = false
         this.getData()
       })
