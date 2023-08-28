@@ -115,9 +115,19 @@ export default {
         url += `&from=${this.filter.dates[0]}&to=${this.filter.dates[1]}`
       }
       this.CallAPI("get", url, {}, (res) => {
-        this.data = res.data.data;
-        console.log(this.data);
         this.totalItems = res.data.total;
+        for (let i in res.data.data) {
+          this.data.push({
+            code: res.data.data[i].code,
+            phone: res.data.data[i].phone,
+            amount: res.data.data[i].amount,
+            money: res.data.data[i].money,
+            token: res.data.data[i].token,
+            status: res.data.data[i].status,
+            created_at: res.data.data[i].created_at,
+            txhash: res.data.data[i].txhash ? res.data.data[i].txhash : 0
+          })
+        }
       });
     },
     searchHandle() {
