@@ -171,14 +171,14 @@ export default {
       this.CallAPI("put", "manage/buy-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công.", txhash: this.txhash }, (res) => {
         this.$toast.success('Xác nhận đơn hàng thành công')
         this.dialog1 = false
-        this.sendNotifi('#01c77d', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra ví của bạn.`, "/history")
+        this.sendNotifi('#01c77d', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra ví của bạn.`, "/history/buy")
         this.getData()
       })
     },
     cancleOrder() {
       this.CallAPI("put", "manage/buy-order/" + this.$route.params.id, { status: 2, description: this.reason }, (res) => {
         this.$toast.success('Hủy đơn hàng thành công')
-        this.sendNotifi('#ff5252', `Giao dịch mã ${this.data.code} đã bị hủy. ${this.reason}`, "/history")
+        this.sendNotifi('#ff5252', `Giao dịch mã ${this.data.code} đã bị hủy. ${this.reason}`, "/history/buy")
         this.dialog = false
         this.getData()
       })

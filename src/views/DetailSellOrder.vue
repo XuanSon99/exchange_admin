@@ -151,7 +151,7 @@ export default {
     confirmOrder() {
       this.CallAPI("put", "manage/sell-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công." }, (res) => {
         this.$toast.success('Xác nhận đơn hàng thành công')
-        this.sendNotifi('#01c77d', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra tài khoản của bạn.`, "/history")
+        this.sendNotifi('#01c77d', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra tài khoản của bạn.`, "/history/sell")
         this.dialog = false
         this.getData()
       })
@@ -159,7 +159,7 @@ export default {
     cancleOrder() {
       this.CallAPI("put", "manage/sell-order/" + this.$route.params.id, { status: 2, description: this.reason }, (res) => {
         this.$toast.success('Hủy đơn hàng thành công')
-        this.sendNotifi('#ff5252', `Giao dịch mã ${this.data.code} đã bị hủy. ${this.reason}`, "/history")
+        this.sendNotifi('#ff5252', `Giao dịch mã ${this.data.code} đã bị hủy. ${this.reason}`, "/history/sell")
         this.dialog = false
         this.getData()
       })
