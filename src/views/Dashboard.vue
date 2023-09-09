@@ -66,8 +66,8 @@
           <v-select v-model="token" outlined label="Loại token" :items="tokens"></v-select>
           <v-text-field v-model="amount" outlined type="number" label="Số lượng"></v-text-field>
           <v-text-field v-model="rate" outlined type="number" label="Tỷ giá"></v-text-field>
-          <v-text-field v-model="money" outlined type="number" label="Thành tiền"></v-text-field>
-          <v-text-field v-model="fee" outlined type="number" label="Tiền phí"></v-text-field>
+          <v-text-field :value="money" outlined type="number" label="Thành tiền" readonly></v-text-field>
+          <v-text-field v-model="fee" outlined type="number" label="Tiền phí/ Phí blockchain (USDT)"></v-text-field>
         </div>
         <v-divider></v-divider>
         <v-card-actions>
@@ -93,12 +93,14 @@ export default {
       token: 'usdt',
       amount: '',
       rate: '',
-      money: '',
       fee: 0
     };
   },
   computed: {
     ...mapGetters(["account"]),
+    money(){
+      return this.amount*this.rate
+    }
   },
   mounted() {
     this.getData();
@@ -129,7 +131,7 @@ export default {
         amount: this.amount,
         rate: this.rate,
         money: this.money,
-        fee: this.fee
+        blockchain_fee: this.fee
       }
       if(this.type == 'buy'){
         this.CallAPI("post",'manage/admin-buy',data,(res)=>{

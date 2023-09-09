@@ -14,7 +14,7 @@
             </tr>
             <tr>
               <td>Số lượng mua</td>
-              <td class="uppercase">{{ data.amount }} {{ data.token }} ({{ data.network }})</td>
+              <td class="uppercase"><b>{{ data.amount }} {{ data.token }}</b> ({{ data.network }})</td>
             </tr>
             <tr>
               <td>Số tiền thanh toán</td>
@@ -52,6 +52,10 @@
                 </a>
               </td>
             </tr>
+            <tr v-if="data.blockchain_fee">
+              <td>Phí blockchain</td>
+              <td>{{ data.blockchain_fee }} USDT</td>
+            </tr>
             <tr>
               <td>Trạng thái</td>
               <td>
@@ -69,14 +73,12 @@
             <ul>
               <li>Hãy chắc chắn rằng bạn đã nhận <b class="main-color">{{ formatMoney(data.money) }} VND</b></li>
               <li>Sau đó chuyển <b class="uppercase main-color">{{ data.amount }} {{ data.token }} ({{ data.network
-              }})</b> tới ví
-                <b class="main-color">{{
-                  data.address }}</b>
+              }})</b> vào ví <b class="uppercase main-color">{{ data.address }}</b>
               </li>
             </ul>
           </v-col>
           <v-col cols="12" md="6">
-            <vue-qr :text="data.address" size="250"></vue-qr>
+            <vue-qr :text="data.address" :size="250"></vue-qr>
           </v-col>
         </v-row>
       </v-card>
@@ -110,7 +112,7 @@
     <v-dialog v-model="dialog1" max-width="450px">
       <v-card>
         <v-card-title>
-          <span>Nhập TxHash</span>
+          <span>Thông tin chuyển USDT</span>
           <v-spacer></v-spacer>
           <v-btn icon @click="dialog1 = false">
             <v-icon>mdi-close</v-icon>
@@ -118,7 +120,9 @@
         </v-card-title>
         <v-divider></v-divider>
         <div class="mx-6 mt-6">
-          <v-text-field v-model="txhash" outlined clearable placeholder="Nhập txhash vừa chuyển"></v-text-field>
+          <v-text-field v-model="blockchain_fee" outlined type="number"
+            placeholder="Phí blockchain (USDT)"></v-text-field>
+          <v-text-field v-model="txhash" outlined placeholder="Nhập txhash vừa chuyển"></v-text-field>
         </div>
         <v-divider></v-divider>
         <v-card-actions>
@@ -143,7 +147,8 @@ export default {
       data: "",
       state_list: "",
       reason: "Do chúng tôi chưa nhận được khoản tiền bạn phải thanh toán.",
-      txhash: ""
+      txhash: "",
+      blockchain_fee: ""
     };
   },
   mounted() {
@@ -168,7 +173,7 @@ export default {
         this.$toast.error('Vui lòng nhập TxHash')
         return
       }
-      this.CallAPI("put", "manage/buy-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công.", txhash: this.txhash }, (res) => {
+      this.CallAPI("put", "manage/buy-order/" + this.$route.params.id, { status: 1, description: "Đơn hàng giao dịch thành công.", txhash: this.txhash, blockchain_fee: this.blockchain_fee }, (res) => {
         this.$toast.success('Xác nhận đơn hàng thành công')
         this.dialog1 = false
         this.sendNotifi('#01c77d', `Giao dịch mã ${this.data.code} đã thành công. Vui lòng kiểm tra ví của bạn.`, "/history/buy")

@@ -50,6 +50,10 @@
               <td>Thông báo KH</td>
               <td>{{ data.description }}</td>
             </tr>
+            <tr v-if="data.blockchain_fee">
+              <td>Phí nhập USDT</td>
+              <td>{{ data.blockchain_fee }} USDT</td>
+            </tr>
             <tr>
               <td>Trạng thái</td>
               <td>

@@ -155,7 +155,7 @@ export default {
       });
       return {
         total: total,
-        average: this.formatMoney(rate_total / total)
+        average: rate_total / total
       }
     },
     getDataExport() {
@@ -166,13 +166,14 @@ export default {
 
         this.excel_htmls = `
             <tr>
-              <td colspan="8" style="text-align: center"><b>BÁO CÁO ĐƠN BÁN</b></td>
+              <td colspan="9" style="text-align: center"><b>BÁO CÁO ĐƠN BÁN</b></td>
             </tr>
             <tr>
                 <th style="width: 60px">STT</th>
                 <th style="width: 80px">Mã đơn</th>
                 <th style="width: 100px">Số điện thoại</th>
                 <th style="width: 120px">Thời gian</th>
+                <th style="width: 80px">Phí blockchain</th>
                 <th style="width: 80px">Tiền phí</th>
                 <th style="width: 150px">Số lượng bán</th>
                 <th style="width: 100px">Tỷ giá</th>
@@ -182,6 +183,7 @@ export default {
 
         let total_money = 0
         let total_fee = 0
+        let total_blockchain_fee = 0
 
         for (let [index, item] of res.data.data.entries()) {
           this.excel_htmls += `
@@ -190,6 +192,7 @@ export default {
                     <td>${item.code}</td>
                     <td style="text-align: center">${item.phone ? item.phone : 'Không có'}</td>
                     <td>${this.formatDate(item.created_at)}</td>
+                    <td>${item.blockchain_fee}</td>
                     <td>${this.formatMoney(item.fee)}</td>
                     <td class="uppercase" style="text-align: center">${item.amount} ${item.token}</td>
                     <td>${this.formatMoney(item.rate)}</td>
@@ -198,31 +201,33 @@ export default {
             `;
           total_money += item.money
           total_fee += item.fee
+          total_blockchain_fee += item.blockchain_fee
         }
 
         this.excel_htmls += `
-          <tr style="color: red">
+          <tr style="color: green">
             <td colspan="4" rowspan="5" style="text-align: center; vertical-align: middle;"><b>Tổng/Tỷ giá trung bình</b></td>
+            <td rowspan="5" style="text-align: center; vertical-align: middle; color: red"><b>${this.formatMoney(total_blockchain_fee * this.totalAmount(res.data.data, 'usdt').average)}</b></td>
             <td rowspan="5" style="text-align: center; vertical-align: middle;"><b>${this.formatMoney(total_fee)}</b></td>
             <td style="text-align: center"><b>${this.totalAmount(res.data.data, 'usdt').total} USDT</b></td>
-            <td><b>${this.totalAmount(res.data.data, 'usdt').average}</b></td>
+            <td><b>${this.formatMoney(this.totalAmount(res.data.data, 'usdt').average)}</b></td>
             <td rowspan="5" style="text-align: center; vertical-align: middle;"><b>${this.formatMoney(total_money)}</b></td>
           </tr>
-          <tr style="color: red">
+          <tr style="color: green">
             <td style="text-align: center"><b>${this.totalAmount(res.data.data, 'btc').total} BTC</b></td>
-            <td><b>${this.totalAmount(res.data.data, 'btc').average}</b></td>
+            <td><b>${this.formatMoney(this.totalAmount(res.data.data, 'btc').average)}</b></td>
           </tr>
-          <tr style="color: red">
+          <tr style="color: green">
             <td style="text-align: center"><b>${this.totalAmount(res.data.data, 'eth').total} ETH</b></td>
-            <td><b>${this.totalAmount(res.data.data, 'eth').average}</b></td>
+            <td><b>${this.formatMoney(this.totalAmount(res.data.data, 'eth').average)}</b></td>
           </tr>
-          <tr style="color: red">
+          <tr style="color: green">
             <td style="text-align: center"><b>${this.totalAmount(res.data.data, 'busd').total} BUSD</b></td>
-            <td><b>${this.totalAmount(res.data.data, 'busd').average}</b></td>
+            <td><b>${this.formatMoney(this.totalAmount(res.data.data, 'busd').average)}</b></td>
           </tr>
-          <tr style="color: red">
+          <tr style="color: green">
             <td style="text-align: center"><b>${this.totalAmount(res.data.data, 'bnb').total} BNB</b></td>
-            <td><b>${this.totalAmount(res.data.data, 'bnb').average}</b></td>
+            <td><b>${this.formatMoney(this.totalAmount(res.data.data, 'bnb').average)}</b></td>
           </tr>
         `
       });
