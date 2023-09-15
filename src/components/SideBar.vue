@@ -12,7 +12,7 @@
         <v-list>
           <v-list-item>
             <v-list-item-title @click="dialog = true">
-             Đổi mật khẩu
+              Đổi mật khẩu
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="logout">
@@ -104,20 +104,20 @@ export default {
           route: "/notification",
         },
         {
-          icon: "mdi-cards-outline",
-          text: "Trạng thái",
-          route: "/status",
-        },
-        {
-          icon: "mdi-cards-outline",
+          icon: "mdi-cog",
           text: "Cài đặt",
           route: "/setup",
         },
-        {
-          icon: "mdi-layers-outline",
-          text: "DS admin",
-          route: "/admin",
-        },
+        // {
+        //   icon: "mdi-cards-outline",
+        //   text: "Trạng thái",
+        //   route: "/status",
+        // },
+        // {
+        //   icon: "mdi-layers-outline",
+        //   text: "DS admin",
+        //   route: "/admin",
+        // },
       ],
       password: "",
       dialog: false,

@@ -38,12 +38,13 @@
               <td>Thời gian</td>
               <td>{{ formatDate(data.created_at) }}</td>
             </tr>
-            <tr v-if="data.customer_address">
-              <td>Ví KH chuyển</td>
+            <tr>
+              <td>Txhash</td>
               <td>
-                <a :href="toExplorer('address', data.customer_address)" target="_blank">
+                <a :href="toExplorer('address', data.customer_address)" target="_blank" v-if="data.customer_address">
                   {{ data.customer_address }}
                 </a>
+                <b class="error-color" v-else>Chưa nhập</b>
               </td>
             </tr>
             <tr v-if="data.description">
@@ -71,13 +72,6 @@
             <ul>
               <li>Hãy chắc chắn rằng bạn đã nhận
                 <b class="uppercase main-color">{{ data.amount }} {{ data.token }} ({{ data.network }})</b>
-                từ ví
-                <b class="uppercase main-color" v-if="data.customer_address">
-                  {{ data.customer_address.slice(-5) }}
-                </b>
-                <b class="uppercase main-color" v-else>
-                  Khách hàng không nhập ví
-                </b>
               </li>
               <li>
                 Sau đó chuyển <b class="main-color">{{ formatMoney(data.money) }} VND</b> vào ngân hàng:
