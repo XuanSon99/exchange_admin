@@ -8,8 +8,8 @@
         <v-text-field v-model="search" append-icon="mdi-magnify" label="Search"
           @keydown.enter="searchHandle"></v-text-field>
       </v-card-title>
-      <v-data-table :headers="headers" :items="data" :items-per-page="5" :page.sync="page"
-        :server-items-length="totalItems" :footer-props="{ 'items-per-page-options': [5, 5] }">
+      <v-data-table :headers="headers" :items="data" :items-per-page="10" :page.sync="page"
+        :server-items-length="totalItems" :footer-props="{ 'items-per-page-options': [10, 10] }">
         <template v-slot:[`item.created_at`]="{ item }">
           {{ formatDate(item.created_at) }}
         </template>

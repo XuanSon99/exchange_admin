@@ -5,13 +5,13 @@
         <v-icon class="mr-2" color="primary" large>mdi-account-circle-outline</v-icon>
         Đơn bán
         <v-spacer></v-spacer>
-        <v-btn class="ml-5 mb-7" @click="exportReport">Xuất báo cáo ngày</v-btn>
+        <v-btn class="ml-5 mb-7" @click="dialog = true">Xuất báo cáo</v-btn>
         <v-btn color="primary" small fab class="ml-5 mb-7 elevation-0" @click="refreshFilter">
           <v-icon>
             mdi-refresh
           </v-icon>
         </v-btn>
-        <div class="w300 ml-5">
+        <!-- <div class="w300 ml-5">
           <v-menu v-model="menu1" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
             <template v-slot:activator="{ on, attrs }">
               <v-text-field v-model="dateRangeText" label="Thời gian" readonly v-bind="attrs" v-on="on" outlined
@@ -19,7 +19,7 @@
             </template>
             <v-date-picker v-model="filter.dates" @input="menu1 = false" range></v-date-picker>
           </v-menu>
-        </div>
+        </div> -->
         <div class="w300 ml-5">
           <v-select :items="state_list" item-text="status" item-value="id" v-model="filter.status" outlined
             label="Trạng thái" dense></v-select>
@@ -54,6 +54,28 @@
         </template>
       </v-data-table>
     </div>
+    <v-dialog v-model="dialog" max-width="380px">
+      <v-card>
+        <v-card-title>
+          <span>Chọn thời gian xuất</span>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <div class="mx-6 mt-6">
+          <v-date-picker v-model="export_date" full-width locale="vi-vn"></v-date-picker>
+        </div>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="default" @click="dialog = false"> Hủy </v-btn>
+          <v-btn color="primary" @click="exportReport"> Xác nhận </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </main>
 </template>
 
@@ -85,7 +107,8 @@ export default {
         status: '',
         dates: []
       },
-      excel_htmls: ''
+      excel_htmls: '',
+      export_date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
     };
   },
   computed: {
@@ -160,8 +183,10 @@ export default {
     },
     getDataExport() {
       let d = new Date()
-      let date = d.toISOString().slice(0, 10)
-      let url = `manage/sell-order?page=1&perPage=999&status=1&from=${date}&to=${date}`
+      let date_from = '2023-09-01'
+      let date_to = '2023-10-30'
+
+      let url = `manage/sell-order?page=1&perPage=999&status=1&from=${this.export_date}&to=${this.export_date}`
       this.CallAPI("get", url, {}, (res) => {
 
         this.excel_htmls = `
@@ -277,6 +302,9 @@ export default {
       if (this.filter.dates[1] || !this.filter.dates[0]) {
         this.getData()
       }
+    },
+    export_date(){
+      this.getDataExport()
     }
   },
 };
