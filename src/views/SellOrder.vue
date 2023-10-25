@@ -64,7 +64,7 @@
           </v-btn>
         </v-card-title>
         <v-divider></v-divider>
-        <div class="mx-6 mt-6">
+        <div class="ma-6">
           <v-date-picker v-model="export_date" full-width locale="vi-vn"></v-date-picker>
         </div>
         <v-divider></v-divider>
@@ -197,7 +197,7 @@ export default {
                 <th style="width: 60px">STT</th>
                 <th style="width: 80px">Mã đơn</th>
                 <th style="width: 100px">Số điện thoại</th>
-                <th style="width: 120px">Thời gian</th>
+                <th style="width: 150px">Thời gian</th>
                 <th style="width: 80px">Phí blockchain</th>
                 <th style="width: 80px">Tiền phí</th>
                 <th style="width: 150px">Số lượng bán</th>
@@ -254,6 +254,12 @@ export default {
             <td style="text-align: center"><b>${this.totalAmount(res.data.data, 'bnb').total} BNB</b></td>
             <td><b>${this.formatMoney(this.totalAmount(res.data.data, 'bnb').average)}</b></td>
           </tr>
+          <tr>
+            <td colspan="4" style="text-align: center; vertical-align: middle; color: green"><b>Tiền lãi</b></td>
+            <td><b>Đơn bán</b></td>
+            <td style="text-align: center; vertical-align: middle; color: green"><b>${this.formatMoney(total_fee - total_blockchain_fee * this.totalAmount(res.data.data, 'usdt').average)}</b></td>
+            <td colspan="3" style="text-align: center; vertical-align: middle; color: green"></td>
+          </tr>
         `
       });
     },
@@ -277,10 +283,7 @@ export default {
       };
 
       var link = document.createElement("a");
-      link.download =
-        "Báo cáo đơn khách hàng bán ngày " +
-        new Date().toLocaleDateString("en-GB") +
-        ".xls";
+      link.download = `Báo cáo đơn khách hàng bán ngày ${this.export_date}.xls`
       link.href = uri + base64(format(template, ctx));
       link.click();
     },

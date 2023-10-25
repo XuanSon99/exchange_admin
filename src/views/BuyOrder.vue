@@ -183,6 +183,7 @@ export default {
     getDataExport() {
       let d = new Date()
       let date_from = '2023-09-01'
+      this.excel_htmls = ""
 
       let url = `manage/buy-order?page=1&perPage=999&status=1&from=${this.export_date}&to=${this.export_date}`
       this.CallAPI("get", url, {}, (res) => {
@@ -195,7 +196,7 @@ export default {
                 <th style="width: 60px">STT</th>
                 <th style="width: 80px">Mã đơn</th>
                 <th style="width: 100px">Số điện thoại</th>
-                <th style="width: 120px">Thời gian</th>
+                <th style="width: 150px">Thời gian</th>
                 <th style="width: 80px">Phí blockchain</th>
                 <th style="width: 80px">Tiền phí KH</th>
                 <th style="width: 150px">Số lượng mua</th>
@@ -252,14 +253,20 @@ export default {
             <td style="text-align: center"><b>${this.totalAmount(res.data.data, 'bnb').total} BNB</b></td>
             <td><b>${this.formatMoney(this.totalAmount(res.data.data, 'bnb').average)}</b></td>
           </tr>
-          <tr style="color: green">
-            <td colspan="4" rowspan="4" style="text-align: center; vertical-align: middle;"><b>Tiền lãi</b></td>
-            <td colspan="2" style="text-align: center; vertical-align: middle;"><b>${this.formatMoney(total_fee - total_blockchain_fee * this.totalAmount(res.data.data, 'usdt').average)}</b></td>
-            <td colspan="3" rowspan="4"></td>
+          <tr>
+            <td colspan="4" rowspan="3" style="text-align: center; vertical-align: middle; color: green"><b>Tiền lãi</b></td>
+            <td><b>Đơn mua</b></td>
+            <td style="text-align: center; vertical-align: middle; color: green"><b>${this.formatMoney(total_fee - total_blockchain_fee * this.totalAmount(res.data.data, 'usdt').average)}</b></td>
+            <td colspan="3" rowspan="3" style="text-align: center; vertical-align: middle; color: green"><b>=sum(</b></td>
           </tr>
-          <tr><td colspan="2" style="text-align: center></td></tr>
-          <tr><td colspan="2" style="text-align: center></td></tr>
-          <tr><td colspan="2" style="text-align: center></td></tr>
+          <tr>
+            <td><b>Đơn bán</b></td>
+            <td style="text-align: center; color: green"><b></b></td>
+          </tr>
+          <tr>
+            <td><b>Chênh giá</b></td>
+            <td style="text-align: center; color: green"><b></b></td>
+          </tr>
         `
       });
     },
@@ -283,10 +290,7 @@ export default {
       };
 
       var link = document.createElement("a");
-      link.download =
-        "Báo cáo đơn khách hàng mua ngày " +
-        new Date().toLocaleDateString("en-GB") +
-        ".xls";
+      link.download = `Báo cáo đơn khách hàng mua ngày ${this.export_date}.xls`
       link.href = uri + base64(format(template, ctx));
       link.click();
     },
