@@ -5,7 +5,7 @@
         <v-icon class="mr-2" color="primary" large>mdi-account-circle-outline</v-icon>
         Đơn mua
         <v-spacer></v-spacer>
-        <v-btn class="ml-5 mb-7" @click="dialog = true">Xuất báo cáo</v-btn>
+        <v-btn class="ml-5 mb-7" @click="dialog = true">Xuất báo cáo ngày</v-btn>
         <v-btn color="primary" small fab class="ml-5 mb-7 elevation-0" @click="refreshFilter">
           <v-icon>
             mdi-refresh
@@ -71,7 +71,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn class="default" @click="dialog = false"> Hủy </v-btn>
-          <v-btn color="primary" @click="exportReport"> Xác nhận </v-btn>
+          <v-btn color="primary" @click="exportReport" :disabled="loading"> Xác nhận </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -109,6 +109,7 @@ export default {
       },
       excel_htmls: '',
       export_date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      loading: false
     };
   },
   computed: {
@@ -181,6 +182,7 @@ export default {
       }
     },
     getDataExport() {
+      this.loading = true
       let d = new Date()
       let date_from = '2023-09-01'
       this.excel_htmls = ""
@@ -190,7 +192,7 @@ export default {
 
         this.excel_htmls = `
             <tr>
-              <td colspan="9" style="text-align: center"><b>BÁO CÁO ĐƠN MUA</b></td>
+              <td colspan="9" style="text-align: center"><b>BÁO CÁO ĐƠN MUA ${this.export_date}</b></td>
             </tr>
             <tr>
                 <th style="width: 60px">STT</th>
@@ -254,20 +256,13 @@ export default {
             <td><b>${this.formatMoney(this.totalAmount(res.data.data, 'bnb').average)}</b></td>
           </tr>
           <tr>
-            <td colspan="4" rowspan="3" style="text-align: center; vertical-align: middle; color: green"><b>Tiền lãi</b></td>
+            <td colspan="4" style="text-align: center; vertical-align: middle; color: green"><b>Tiền lãi</b></td>
             <td><b>Đơn mua</b></td>
             <td style="text-align: center; vertical-align: middle; color: green"><b>${this.formatMoney(total_fee - total_blockchain_fee * this.totalAmount(res.data.data, 'usdt').average)}</b></td>
-            <td colspan="3" rowspan="3" style="text-align: center; vertical-align: middle; color: green"><b>=sum(</b></td>
-          </tr>
-          <tr>
-            <td><b>Đơn bán</b></td>
-            <td style="text-align: center; color: green"><b></b></td>
-          </tr>
-          <tr>
-            <td><b>Chênh giá</b></td>
-            <td style="text-align: center; color: green"><b></b></td>
+            <td colspan="3" style="text-align: center; vertical-align: middle; color: green"></td>
           </tr>
         `
+        this.loading = false
       });
     },
     exportReport() {
@@ -292,8 +287,25 @@ export default {
       var link = document.createElement("a");
       link.download = `Báo cáo đơn khách hàng mua ngày ${this.export_date}.xls`
       link.href = uri + base64(format(template, ctx));
-      link.click();
+      // link.click();
+
+      const data = new FormData();
+      data.append("file", this.dataURLtoFile(link.href, 'export.xls'));
+      this.CallAPI("post", "manage/upload-file", data, (res) => {
+        window.prompt("File Link", this.image(res.data))
+      })
     },
+    dataURLtoFile(dataurl, filename) {
+      var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[arr.length - 1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    }
   },
   watch: {
     page() {
