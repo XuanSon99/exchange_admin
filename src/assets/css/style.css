@@ -286,3 +286,7 @@ p.cancel1 {
 .border {
     border: 1px solid #000;
 }
+
+.v-date-picker-table {
+    height: 300px !important;
+}
