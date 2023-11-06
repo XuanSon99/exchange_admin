@@ -41,7 +41,7 @@
             <tr>
               <td>Txhash</td>
               <td>
-                <a :href="toExplorer('address', data.customer_address)" target="_blank" v-if="data.customer_address">
+                <a :href="toExplorer('tx', data.customer_address)" target="_blank" v-if="data.customer_address">
                   {{ data.customer_address }}
                 </a>
                 <b class="error-color" v-else>Chưa nhập</b>
